@@ -5,7 +5,7 @@ public class RadioTest {
 
     @Test
     public void shouldIncreaseStation() {
-        Radio receiver = new Radio();
+        Radio receiver = new Radio(20);
 
         receiver.next();
         receiver.next();
@@ -17,10 +17,10 @@ public class RadioTest {
     }
 
     @Test
-    public void shouldIncreaseStationNineToZero() {
-        Radio receiver = new Radio();
+    public void shouldIncreaseStationMaxToZero() {
+        Radio receiver = new Radio(30);
 
-        receiver.setStationNumber(9);
+        receiver.setStationNumber(29);
         receiver.next();
 
         int expected = 0;
@@ -31,21 +31,48 @@ public class RadioTest {
 
     @Test
     public void shouldDecreaseStation() {
-        Radio receiver = new Radio();
+        Radio receiver = new Radio(200);
 
-        receiver.setStationNumber(9);
+        receiver.setStationNumber(199);
         receiver.prev();
         receiver.prev();
 
-        int expected = 7;
+        int expected = 197;
         int actual = receiver.getStationNumber();
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void shouldDecreaseStationZeroToNine() {
-        Radio receiver = new Radio();
+    public void shouldDecreaseStationZeroToMax() {
+        Radio receiver = new Radio(1000);
+
+        receiver.setStationNumber(0);
+        receiver.prev();
+
+        int expected = 999;
+        int actual = receiver.getStationNumber();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldRejectInvalidStationNumber() {
+        Radio receiver = new Radio(20);
+
+        receiver.setStationNumber(9);
+        receiver.setStationNumber(20);
+        receiver.setStationNumber(-1);
+
+        int expected = 9;
+        int actual = receiver.getStationNumber();
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldChangeIncorrectStationQuanrityToTen() {
+        Radio receiver = new Radio(-1);
 
         receiver.setStationNumber(0);
         receiver.prev();
@@ -57,12 +84,11 @@ public class RadioTest {
     }
 
     @Test
-    public void shouldRejectStationNumber() {
+    public void shouldVoidConstructorCorrectSet() {
         Radio receiver = new Radio();
 
-        receiver.setStationNumber(9);
-        receiver.setStationNumber(11);
-        receiver.setStationNumber(-1);
+        receiver.setStationNumber(0);
+        receiver.prev();
 
         int expected = 9;
         int actual = receiver.getStationNumber();
@@ -87,11 +113,11 @@ public class RadioTest {
     public void shouldStopIncreaseVolume() {
         Radio receiver = new Radio();
 
-        for(int i = 0; i < 15; i++) {
+        for(int i = 0; i < 150; i++) {
             receiver.volumePlus();
         }
 
-        int expected = 10;
+        int expected = 100;
         int actual = receiver.getVolumeRange();
 
         Assertions.assertEquals(expected, actual);
@@ -101,12 +127,12 @@ public class RadioTest {
     public void shouldDecreaseVolume() {
         Radio receiver = new Radio();
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 50; i++) {
             receiver.volumePlus();
         }
         receiver.volumeMinus();
 
-        int expected = 4;
+        int expected = 49;
         int actual = receiver.getVolumeRange();
 
         Assertions.assertEquals(expected, actual);
